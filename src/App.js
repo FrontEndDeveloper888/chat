@@ -1,24 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import { Button, TextField } from '@mui/material';
+import { useState } from 'react';
+
+function Chat() {
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
+
+  const handleInputChange = (e) => {
+    setMessage(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+    setMessage('');
+  };
+
+  return (
+      <div>
+        <div>
+          <TextField
+              label="Message"
+              variant="outlined"
+              value={message}
+              onChange={handleInputChange}
+          />
+          <Button variant="contained" onClick={handleSubmit}>
+            Send
+          </Button>
+            <div>
+                {messages.map((msg, index) => (
+                    <div key={index}>{msg}</div>
+                ))}
+            </div>
+        </div>
+      </div>
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div>
+        <h1>Chat App</h1>
+        <Chat />
+      </div>
   );
 }
 
