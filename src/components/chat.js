@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Box, Typography, TextField,  IconButton, InputAdornment } from "@mui/material";
+import { Box, Typography, TextField, IconButton, InputAdornment } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
+import { Avatar } from "@mui/material";
+
 
 const Chat = ({ selectedContact, messages, setMessages }) => {
     const [newMessage, setNewMessage] = useState("");
@@ -40,7 +42,26 @@ const Chat = ({ selectedContact, messages, setMessages }) => {
     };
 
     return (
-        <Box sx={{ width: "80%", padding: "15px", background: "#0E1621" }}>
+        <Box sx={{ width: "80%", padding: "0", background: "#0E1621" }}>
+            <Box sx={{ height: "83px", display: "flex", alignItems:"center", padding:"0 50px",background: "#232F3DFF", border: "1px solid #313131" }}>
+                {selectedContact && selectedContact.avatarUrl ? (
+                    <Avatar src={selectedContact.avatarUrl} sx={{ marginRight: "16px" }} />
+                ) : (
+                    <Avatar sx={{ marginRight: "16px" }}>{selectedContact ? selectedContact.name.charAt(0) : null}</Avatar>
+                )}
+                {selectedContact ? (
+                    <Typography variant="h5" color="white">
+                        {selectedContact.name}
+                    </Typography>
+                ) : (
+                    <Typography variant="h5" color="white">
+                        Kontakt tanlang
+                    </Typography>
+                )}
+            </Box>
+
+
+
             {selectedContact ? (
                 <>
                     <Box
@@ -86,7 +107,7 @@ const Chat = ({ selectedContact, messages, setMessages }) => {
                         sx={{
                             position: "fixed",
                             bottom: 5,
-                            width: "78%",
+                            width: "79%",
                             display: "flex",
                             alignItems: "center",
                             padding: "5px",
@@ -96,7 +117,7 @@ const Chat = ({ selectedContact, messages, setMessages }) => {
                         <TextField
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
-                            placeholder="Type your message"
+                            placeholder="Xabar jonatish..."
                             variant="outlined"
                             sx={{
                                 flex: 1,
@@ -130,7 +151,7 @@ const Chat = ({ selectedContact, messages, setMessages }) => {
                 </>
             ) : (
                 <Typography variant="h6" sx={{ textAlign: "center", marginTop: "30%", color: "lightgrey" }}>
-                    Select a contact to start chatting
+                    Chat boshlash uchun kontakt tanlang
                 </Typography>
             )}
         </Box>

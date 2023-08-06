@@ -9,6 +9,8 @@ import {
     Avatar,
     Modal,
     InputAdornment,
+    InputLabel,
+    Typography
 } from "@mui/material";
 
 const Contacts = ({ contacts, onContactSelect, selectedContact, onAddContact }) => {
@@ -17,6 +19,7 @@ const Contacts = ({ contacts, onContactSelect, selectedContact, onAddContact }) 
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredContacts, setFilteredContacts] = useState(contacts);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [searched, setSearched] = useState(true); // Search natijasi topilmaganini belgilash uchun
 
     useEffect(() => {
         handleSearchContacts(searchQuery);
@@ -44,6 +47,7 @@ const Contacts = ({ contacts, onContactSelect, selectedContact, onAddContact }) 
             contact.name.toLowerCase().includes(query.toLowerCase())
         );
         setFilteredContacts(filtered);
+        setSearched(true); // Malumot topildi
     };
 
     return (
@@ -52,7 +56,7 @@ const Contacts = ({ contacts, onContactSelect, selectedContact, onAddContact }) 
                 <TextField
                     value={searchQuery}
                     onChange={(e) => handleSearchContacts(e.target.value)}
-                    placeholder="Search contact"
+                    placeholder="Kontakt qidirish"
                     variant="outlined"
                     color="primary"
                     fullWidth
@@ -69,46 +73,60 @@ const Contacts = ({ contacts, onContactSelect, selectedContact, onAddContact }) 
                             border: "none",
                         },
                         "& input::placeholder": {
-                            color: "#557A8C",
+                            color: "white",
                             margin: "10px",
                         },
+                    }}
+                    InputProps={{
+                        style: { color: "white" },
                     }}
                 />
             </Box>
             <Box sx={{ maxHeight: "calc(100vh - 150px)", overflowY: "auto" }}>
-                <List>
-                    {filteredContacts.map((contact) => (
-                        <ListItem
-                            key={contact.id}
-                            button
-                            onClick={() => onContactSelect(contact)}
-                            sx={{
-                                backgroundColor: selectedContact && selectedContact.id === contact.id ? "#2B5178" : "#17212B",
-                                display: "flex",
-                                alignItems: "center",
-                                ":hover": {
-                                    backgroundColor: "#212B35",
-                                },
-                            }}
-                        >
-                            {contact.avatarUrl ? (
-                                <Avatar sx={{ marginRight: "16px" }} alt={contact.name} src={contact.avatarUrl} />
-                            ) : (
-                                <Avatar sx={{ marginRight: "16px" }}>{contact.name.charAt(0)}</Avatar>
-                            )}
-                            <ListItemText
-                                primaryTypographyProps={{ color: "white" }}
-                                primary={contact.name}
-                                secondaryTypographyProps={{ color: "lightgrey" }}
-                                secondary={`Mobile: ${contact.phone}`}
-                            />
-                        </ListItem>
-                    ))}
-                </List>
+                {filteredContacts.length > 0 ? (
+                    <List>
+                        {filteredContacts.map((contact) => (
+                            <ListItem
+                                key={contact.id}
+                                button
+                                onClick={() => onContactSelect(contact)}
+                                sx={{
+                                    backgroundColor: selectedContact && selectedContact.id === contact.id ? "#2B5178" : "#17212B",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    ":hover": {
+                                        backgroundColor: "#212B35",
+                                    },
+                                }}
+                            >
+                                {contact.avatarUrl ? (
+                                    <Avatar sx={{ marginRight: "16px" }} alt={contact.name} src={contact.avatarUrl} />
+                                ) : (
+                                    <Avatar sx={{ marginRight: "16px" }}>{contact.name.charAt(0)}</Avatar>
+                                )}
+                                <ListItemText
+                                    primaryTypographyProps={{ color: "white" }}
+                                    primary={contact.name}
+                                    secondaryTypographyProps={{ color: "lightgrey" }}
+                                    secondary={`Mobil: ${contact.phone}`}
+                                />
+                            </ListItem>
+                        ))}
+                    </List>
+                ) : searched ? (
+                    <Typography variant="h6" sx={{ textAlign: "center", marginTop: "5%",marginBottom:"20px" ,color: "red" }}>
+                        User orqali qidiruv yolga qoyilmagan !!!
+                    </Typography>
+                ) : (
+
+                    <Typography variant="h6" sx={{ textAlign: "center", marginTop: "30%", color: "lightgrey" }}>
+                        Kontakt tanlang
+                    </Typography>
+                )}
             </Box>
             <Box sx={{ padding: "16px" }}>
                 <Button onClick={() => setIsModalOpen(true)} variant="contained" color="primary" fullWidth>
-                    Add Contact
+                    Kontakt qo'shish
                 </Button>
             </Box>
             <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -118,7 +136,7 @@ const Contacts = ({ contacts, onContactSelect, selectedContact, onAddContact }) 
                         top: "50%",
                         left: "50%",
                         transform: "translate(-50%, -50%)",
-                        backgroundColor: "white",
+                        backgroundColor: "#212B35FF",
                         p: 4,
                         minWidth: "300px",
                         borderRadius: "8px",
@@ -131,9 +149,12 @@ const Contacts = ({ contacts, onContactSelect, selectedContact, onAddContact }) 
                     <TextField
                         value={newContactName}
                         onChange={(e) => setNewContactName(e.target.value)}
-                        label="Enter new contact name"
+                        label="Yangi kontakt nomini kiriting"
                         variant="outlined"
                         fullWidth
+                        InputProps={{
+                            style: { color: "white" },
+                        }}
                         sx={{ marginBottom: "16px" }}
                     />
                     <TextField
@@ -147,17 +168,22 @@ const Contacts = ({ contacts, onContactSelect, selectedContact, onAddContact }) 
                             }
                             setNewContactPhone(phoneNumber);
                         }}
-                        label="Enter new contact phone"
+                        label="Yangi kontakt telefonini kiriting"
                         variant="outlined"
                         fullWidth
                         InputProps={{
-                            startAdornment: <InputAdornment position="start">+998</InputAdornment>,
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <InputLabel style={{ color: "lightgrey" }}>+998</InputLabel>
+                                </InputAdornment>
+                            ),
+                            style: { color: "white" },
                         }}
                         sx={{ marginBottom: "16px" }}
                     />
 
                     <Button onClick={handleAddContact} variant="contained" color="primary" fullWidth>
-                        Add Contact
+                        Kontakt qo'shish
                     </Button>
                 </Box>
             </Modal>
